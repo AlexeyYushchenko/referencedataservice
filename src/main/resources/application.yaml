@@ -1,0 +1,19 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5434/db-1
+    username: postgres
+    password: secret
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    open-in-view: false
+    properties:
+      hibernate:
+        naming:
+          implicit-strategy: org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy
+        show_sql: false
+        format_sql: true
+#        hbm2ddl.auto: create
+#        batch_size: 50
+#        fetch_size: 50
+#        jdbc:
+#          time-zone: European/Moscow
