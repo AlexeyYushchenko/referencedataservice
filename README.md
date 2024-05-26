@@ -1,0 +1,1 @@
+A centralized repository for reference data that can be used across various parts of your application or even across different applications within your organization. Reference data typically includes data that doesn't change frequently, such as country names, codes, currency data, or any other kind of standard classification data.
