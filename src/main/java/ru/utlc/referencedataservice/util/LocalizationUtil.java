@@ -1,33 +1,41 @@
 package ru.utlc.referencedataservice.util;
 
-import lombok.experimental.UtilityClass;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
 import ru.utlc.referencedataservice.dto.country.CountryReadDto;
-import ru.utlc.referencedataservice.dto.currency.CurrencyReadDto;
 
 import java.util.Locale;
 
-@UtilityClass
+@Component
+@Slf4j
+@RequiredArgsConstructor
 public class LocalizationUtil {
 
-    public static CountryReadDto toLocalizedDto(CountryReadDto dto, Locale locale) {
-        return new CountryReadDto(
-                dto.id(),
-                dto.nameLocales().getOrDefault(locale.getLanguage(), dto.name()),
-                dto.code(),
-                dto.isActive(),
-                dto.nameLocales(),
-                dto.auditingInfoDto()
-        );
+    public CountryReadDto toLocalizedDto(CountryReadDto dto, Locale locale) {
+        try {
+            return new CountryReadDto(
+                    dto.id(),
+                    dto.nameLocales().getOrDefault(locale.getLanguage(), dto.name()),
+                    dto.code(),
+                    dto.isActive(),
+                    dto.nameLocales(),
+                    dto.auditingInfoDto()
+            );
+        }catch (Exception e){
+            log.error("Exception in {} with cause: {}", LocalizationUtil.class.getSimpleName(), e.getMessage());
+            return null;
+        }
     }
 
-    public static CurrencyReadDto toLocalizedDto(CurrencyReadDto dto, Locale locale) {
-        return new CurrencyReadDto(
-                dto.id(),
-                dto.code(),
-                dto.nameLocales().getOrDefault(locale.getLanguage(), dto.name()),
-                dto.enabled(),
-                dto.nameLocales(),
-                dto.auditingInfoDto()
-        );
-    }
+//    public CurrencyReadDto toLocalizedDto(CurrencyReadDto dto, Locale locale) {
+//        return new CurrencyReadDto(
+//                dto.id(),
+//                dto.code(),
+//                dto.nameLocales().getOrDefault(locale.getLanguage(), dto.name()),
+//                dto.enabled(),
+//                dto.nameLocales(),
+//                dto.auditingInfoDto()
+//        );
+//    }
 }

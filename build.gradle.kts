@@ -33,10 +33,11 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-aop")
 
     implementation ("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.5.0")
+    testImplementation("org.projectlombok:lombok:1.18.22")
 
     developmentOnly("org.springframework.boot:spring-boot-docker-compose")
-    compileOnly("org.projectlombok:lombok")
     runtimeOnly("org.postgresql:postgresql")
+    compileOnly("org.projectlombok:lombok")
     annotationProcessor("org.projectlombok:lombok")
     providedRuntime("org.springframework.boot:spring-boot-starter-tomcat")
 
@@ -45,8 +46,8 @@ dependencies {
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.security:spring-security-test")
+    testImplementation("org.testcontainers:postgresql:1.19.8")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
-
 }
 
 tasks.withType<JavaCompile> {

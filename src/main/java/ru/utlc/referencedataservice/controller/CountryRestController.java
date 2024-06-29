@@ -2,7 +2,6 @@ package ru.utlc.referencedataservice.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpStatus;
@@ -30,7 +29,6 @@ public class CountryRestController {
     private final CountryService countryService;
     private final MessageSource messageSource;
 
-    @Cacheable("countries")
     @GetMapping
     public ResponseEntity<List<CountryReadDto>> findAll() {
         return ResponseEntity.ok(countryService.findAll(getLocale()));
@@ -38,7 +36,8 @@ public class CountryRestController {
 
     @GetMapping("/{id}")
     public ResponseEntity<CountryReadDto> findById(@PathVariable("id") final Integer id) {
-        return countryService.findById(id, getLocale())
+        var byId = countryService.findById(id, getLocale());
+        return byId
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }

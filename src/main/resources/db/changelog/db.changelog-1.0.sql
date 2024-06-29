@@ -6,7 +6,7 @@ CREATE TABLE IF NOT EXISTS country
     id          SERIAL PRIMARY KEY,
     code        VARCHAR(2) UNIQUE   NOT NULL,
     name        VARCHAR(255) UNIQUE NOT NULL,
-    is_active   BOOLEAN   DEFAULT true,
+    is_active   BOOLEAN   DEFAULT TRUE,
     created_at  TIMESTAMP DEFAULT NOW(),
     modified_at TIMESTAMP DEFAULT NOW(),
     created_by  VARCHAR(64),

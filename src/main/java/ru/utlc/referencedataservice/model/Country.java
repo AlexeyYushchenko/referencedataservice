@@ -25,8 +25,8 @@ public class Country extends AuditingEntity<Integer> {
     @Column(name = "code", unique = true, nullable = false, length = 3)
     private String code;
 
-    @Column(name = "is_active", columnDefinition = "BOOLEAN DEFAULT true")
-    private Boolean active;
+    @Column(name = "is_active", nullable = false)
+    private Boolean isActive;
 
     @Builder.Default
     @ElementCollection
@@ -43,7 +43,7 @@ public class Country extends AuditingEntity<Integer> {
         this.code = code != null ? code.toUpperCase() : null;
     }
 
-    public void setActive(Boolean isActive) {
-        this.active = isActive != null && isActive;
+    public void setIsActive(Boolean isActive) {
+        this.isActive = isActive != null && isActive;
     }
 }
