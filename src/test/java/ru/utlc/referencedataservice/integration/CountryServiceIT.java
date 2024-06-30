@@ -20,7 +20,7 @@ class CountryServiceIT extends IntegrationTestBase {
 
     @Test
     void testFindAllCaching() {
-        var all = countryService.findAll(englishLocale);
+        var all = countryService.findAll();
         System.out.println("Size: %d".formatted(all.size()));
     }
 

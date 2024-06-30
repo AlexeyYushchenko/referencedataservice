@@ -15,7 +15,6 @@ import ru.utlc.referencedataservice.exception.CountryCreationException;
 import ru.utlc.referencedataservice.mapper.CountryMapper;
 import ru.utlc.referencedataservice.repository.CountryRepository;
 import ru.utlc.referencedataservice.util.LocalizationUtil;
-
 import java.util.*;
 
 @Slf4j
@@ -30,9 +29,9 @@ public class CountryService {
     private final CacheManager cacheManager;
 
     @Cacheable("countries")
-    public List<CountryReadDto> findAll(Locale locale) {
+    public List<CountryReadDto> findAll() {
         return countryRepository.findAll().stream()
-                .map(country -> localizationUtil.toLocalizedDto(countryMapper.toDto(country), locale))
+                .map(countryMapper::toDto)
                 .toList();
     }
 

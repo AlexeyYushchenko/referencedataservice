@@ -47,7 +47,7 @@ class CountryServiceTest {
         when(countryMapper.toDto(country)).thenReturn(countryReadDto);
         when(localizationUtil.toLocalizedDto(countryReadDto, locale)).thenReturn(countryReadDto);
 
-        List<CountryReadDto> result = countryService.findAll(locale);
+        List<CountryReadDto> result = countryService.findAll();
 
         assertNotNull(result);
         assertEquals(1, result.size());

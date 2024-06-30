@@ -31,7 +31,7 @@ public class CountryRestController {
 
     @GetMapping
     public ResponseEntity<List<CountryReadDto>> findAll() {
-        return ResponseEntity.ok(countryService.findAll(getLocale()));
+        return ResponseEntity.ok(countryService.findAll());
     }
 
     @GetMapping("/{id}")
