@@ -1,6 +1,5 @@
 package ru.utlc.referencedataservice.service;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -12,11 +11,11 @@ import ru.utlc.referencedataservice.exception.CountryCreationException;
 import ru.utlc.referencedataservice.mapper.CountryMapper;
 import ru.utlc.referencedataservice.model.Country;
 import ru.utlc.referencedataservice.repository.CountryRepository;
-import ru.utlc.referencedataservice.util.LocalizationUtil;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
+
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
@@ -31,21 +30,16 @@ class CountryServiceTest {
     @Mock
     private CountryMapper countryMapper;
 
-    @Mock
-    private LocalizationUtil localizationUtil;
-
     @InjectMocks
     private CountryService countryService;
 
     @Test
     void testFindAll() {
-        Locale locale = Locale.ENGLISH;
         Country country = mock(Country.class);
         CountryReadDto countryReadDto = new CountryReadDto(ID, "CountryName", "CN", true, new HashMap<>(), null);
 
         when(countryRepository.findAll()).thenReturn(List.of(country));
         when(countryMapper.toDto(country)).thenReturn(countryReadDto);
-        when(localizationUtil.toLocalizedDto(countryReadDto, locale)).thenReturn(countryReadDto);
 
         List<CountryReadDto> result = countryService.findAll();
 
@@ -66,9 +60,8 @@ class CountryServiceTest {
 
         when(countryRepository.findById(ID)).thenReturn(Optional.of(country));
         when(countryMapper.toDto(country)).thenReturn(countryReadDto);
-        when(localizationUtil.toLocalizedDto(countryReadDto, locale)).thenReturn(countryReadDto);
 
-        Optional<CountryReadDto> result = countryService.findById(ID, locale);
+        Optional<CountryReadDto> result = countryService.findById(ID);
 
         assertTrue(result.isPresent());
         assertEquals(countryReadDto, result.get());
@@ -88,9 +81,8 @@ class CountryServiceTest {
         when(countryMapper.toEntity(createUpdateDto)).thenReturn(country);
         when(countryRepository.save(country)).thenReturn(country);
         when(countryMapper.toDto(country)).thenReturn(countryReadDto);
-        when(localizationUtil.toLocalizedDto(countryReadDto, locale)).thenReturn(countryReadDto);
 
-        CountryReadDto result = countryService.create(createUpdateDto, locale);
+        CountryReadDto result = countryService.create(createUpdateDto);
 
         assertNotNull(result);
         assertEquals(countryReadDto, result);
@@ -112,9 +104,8 @@ class CountryServiceTest {
         when(countryMapper.update(country, createUpdateDto)).thenReturn(country);
         when(countryRepository.saveAndFlush(country)).thenReturn(country);
         when(countryMapper.toDto(country)).thenReturn(countryReadDto);
-        when(localizationUtil.toLocalizedDto(countryReadDto, locale)).thenReturn(countryReadDto);
 
-        Optional<CountryReadDto> result = countryService.update(ID, createUpdateDto, locale);
+        Optional<CountryReadDto> result = countryService.update(ID, createUpdateDto);
 
         assertTrue(result.isPresent());
         assertEquals(countryReadDto, result.get());
