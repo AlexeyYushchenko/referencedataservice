@@ -5,6 +5,10 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.cache.Cache;
+import org.springframework.cache.CacheManager;
+import org.springframework.cache.concurrent.ConcurrentMapCacheManager;
+import ru.utlc.referencedataservice.constants.CacheNames;
 import ru.utlc.referencedataservice.dto.country.CountryCreateUpdateDto;
 import ru.utlc.referencedataservice.dto.country.CountryReadDto;
 import ru.utlc.referencedataservice.exception.CountryCreationException;
@@ -18,6 +22,7 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
+import static ru.utlc.referencedataservice.constants.CacheNames.*;
 
 @ExtendWith(MockitoExtension.class)
 class CountryServiceTest {
@@ -30,6 +35,11 @@ class CountryServiceTest {
     @Mock
     private CountryMapper countryMapper;
 
+    @Mock
+    private Cache cache;
+    @Mock
+    private CacheManager cacheManager;
+
     @InjectMocks
     private CountryService countryService;
 
@@ -40,6 +50,7 @@ class CountryServiceTest {
 
         when(countryRepository.findAll()).thenReturn(List.of(country));
         when(countryMapper.toDto(country)).thenReturn(countryReadDto);
+        when(cacheManager.getCache(CacheNames.COUNTRIES)).thenReturn(cache);
 
         List<CountryReadDto> result = countryService.findAll();
 

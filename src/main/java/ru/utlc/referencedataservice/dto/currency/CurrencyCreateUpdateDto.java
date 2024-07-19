@@ -30,6 +30,5 @@ public record CurrencyCreateUpdateDto(
         if (code != null) code = code.toUpperCase();
 
         if (enabled == null) enabled = false;
-        //todo если при создании поле отсутствует, то оно true. А если при обновлении поле отсутствует, то должно остаться без изменений.
     }
 }

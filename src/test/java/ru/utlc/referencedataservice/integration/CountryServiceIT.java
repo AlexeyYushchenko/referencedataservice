@@ -19,6 +19,25 @@ class CountryServiceIT extends IntegrationTestBase {
     @Test
     void testFindAllCaching() {
         var all = countryService.findAll();
+        assertEquals(54, all.size());
+
+        CountryCreateUpdateDto countryDto = new CountryCreateUpdateDto(
+                "TEST COUNTRY 1",
+                "T1",
+                true,
+                new LinkedHashMap<>()
+        );
+        countryService.create(countryDto);
+        countryDto = new CountryCreateUpdateDto(
+                "TEST COUNTRY 2",
+                "T2",
+                true,
+                new LinkedHashMap<>()
+        );
+        countryService.create(countryDto);
+
+        all = countryService.findAll();
+        assertEquals(56, all.size());
     }
 
     @Test
@@ -26,6 +45,12 @@ class CountryServiceIT extends IntegrationTestBase {
         Optional<CountryReadDto> maybeCountry = countryService.findById(COUNTRY_ID);
         assertTrue(maybeCountry.isPresent());
         maybeCountry.ifPresent(country -> assertEquals("AUSTRALIA", country.name()));
+
+        var updatedName = "LONDRIA";
+        countryService.update(COUNTRY_ID, new CountryCreateUpdateDto(updatedName, "LD", true, null));
+        maybeCountry = countryService.findById(COUNTRY_ID);
+        assertTrue(maybeCountry.isPresent());
+        maybeCountry.ifPresent(country -> assertEquals(updatedName, country.name()));
     }
 
     @Test
@@ -92,8 +117,9 @@ class CountryServiceIT extends IntegrationTestBase {
                 true,
                 null
         );
-
         Optional<CountryReadDto> actualResult = countryService.update(COUNTRY_ID, countryDto);
+        var originalCountry = countryService.findById(COUNTRY_ID);
+        assertTrue(originalCountry.isPresent());
 
         assertTrue(actualResult.isPresent());
         actualResult.ifPresent(country -> {
@@ -101,6 +127,10 @@ class CountryServiceIT extends IntegrationTestBase {
             assertEquals(countryDto.code(), country.code());
             assertEquals(countryDto.isActive(), country.isActive());
             assertTrue(country.nameLocales().isEmpty());
+
+            assertEquals(originalCountry.get().name(), country.name());
+            assertEquals(originalCountry.get().code(), country.code());
+            assertEquals(originalCountry.get().isActive(), country.isActive());
         });
 
         CountryCreateUpdateDto countryDto2 = new CountryCreateUpdateDto(
@@ -118,38 +148,35 @@ class CountryServiceIT extends IntegrationTestBase {
             assertEquals(countryDto2.nameLocales(), country.nameLocales());
         });
 
-        CountryCreateUpdateDto countryDto3 = new CountryCreateUpdateDto(
-                "BY DEFAULT NAME",
-                "T3",
-                false,
-                Map.of("en", "TEST COUNTRY 3", "ru", "ТЕСТ СТРАНА 3", "it", "IL PAESE PER IL TEST 3")
-        );
-        var actualResult3 = countryService.create(countryDto3);
-        var actualId = actualResult3.id();
-        assertNotNull(actualResult3);
-        assertFalse(actualResult3.isActive());
-        assertEquals("TEST COUNTRY 3", actualResult3.name());
-        assertEquals(countryDto3.code(), actualResult3.code());
-        assertEquals(countryDto3.isActive(), actualResult3.isActive());
-        assertEquals(countryDto3.nameLocales(), actualResult3.nameLocales());
-
         var changedRuName = "ИЗМЕНЕННЫЙ ТЕСТ СТРАНА 3";
         var changedItName = "Il nome e' stato cambiato";
         var byDefaultName = "BY DEFAULT NAME";
         var changedListOfLocalizedNames = Map.of("ru", changedRuName, "it", changedItName);
-        countryDto3 = new CountryCreateUpdateDto(
+        CountryCreateUpdateDto countryDto3 = new CountryCreateUpdateDto(
                 byDefaultName,
                 "T3",
                 true,
                 changedListOfLocalizedNames
         );
 
-        Optional<CountryReadDto> actualResult4 = countryService.findById(actualId); //our request puts entity's value in cache.
-        countryService.update(actualId, countryDto3); //updating under different locale.
-        actualResult4 = countryService.findById(actualId); //while requesting under different locale
-
+        var actualResult4 = countryService.update(COUNTRY_ID, countryDto3);//updating under different locale.
         assertTrue(actualResult4.isPresent());
+
         actualResult4.ifPresent(country -> {
+            assertEquals(true, country.isActive());
+            assertEquals(byDefaultName, country.name());
+            assertEquals(country.nameLocales(), changedListOfLocalizedNames);
+            assertNotNull(country.nameLocales().get("ru"));
+            assertEquals(country.nameLocales().get("ru"), changedRuName);
+            assertNotNull(country.nameLocales().get("it"));
+            assertEquals(country.nameLocales().get("it"), changedItName);
+            assertNull(country.nameLocales().get("en"));
+        });
+
+        var findById4 = countryService.findById(COUNTRY_ID);//while requesting under different locale
+        assertTrue(findById4.isPresent());
+
+        findById4.ifPresent(country -> {
             assertEquals(true, country.isActive());
             assertEquals(byDefaultName, country.name());
             assertEquals(country.nameLocales(), changedListOfLocalizedNames);
@@ -165,5 +192,6 @@ class CountryServiceIT extends IntegrationTestBase {
     void testDeleteEvictsCache() {
         assertFalse(countryService.delete(-124));
         assertTrue(countryService.delete(COUNTRY_ID));
+        assertFalse(countryService.delete(COUNTRY_ID));
     }
 }
