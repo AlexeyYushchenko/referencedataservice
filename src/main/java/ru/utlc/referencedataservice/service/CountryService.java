@@ -8,15 +8,16 @@ import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.utlc.referencedataservice.constants.CacheNames;
 import ru.utlc.referencedataservice.dto.country.CountryCreateUpdateDto;
 import ru.utlc.referencedataservice.dto.country.CountryReadDto;
 import ru.utlc.referencedataservice.exception.CountryCreationException;
 import ru.utlc.referencedataservice.mapper.CountryMapper;
 import ru.utlc.referencedataservice.repository.CountryRepository;
+
 import java.util.List;
 import java.util.Optional;
-import static ru.utlc.referencedataservice.constants.CacheNames.*;
+
+import static ru.utlc.referencedataservice.constants.CacheNames.COUNTRIES;
 
 @Slf4j
 @Service

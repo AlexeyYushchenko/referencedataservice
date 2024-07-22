@@ -17,3 +17,5 @@ spring:
 #        fetch_size: 50
 #        jdbc:
 #          time-zone: European/Moscow
+server:
+  port: 8080
